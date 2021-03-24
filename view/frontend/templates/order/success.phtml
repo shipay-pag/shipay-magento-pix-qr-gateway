@@ -1,0 +1,63 @@
+<?php
+/** @var \Shipay\PixQrGateway\Block\Success $block  */
+
+use Shipay\PixQrGateway\Gateway\Response\ResponseFieldsInterface;
+
+$paymentData = $block->getPaymentAdditionalInformation();
+$walletLabel = $block->getWalletLabel();
+?>
+<div class="shipay-success-page">
+    <div>
+        <p><?= /* @noEscape */ __('Order successfully created!'); ?></p>
+        <?php if ($walletLabel): ?>
+            <div>
+                <p>
+                    <b><?= /* @noEscape */ __('Payment Method');?></b>: <?= /* @noEscape */ $walletLabel; ?>
+                </p>
+            </div>
+        <?php endif; ?>
+        <p class="show-on-web"><?= /* @noEscape */ $block->getSuccessWebMessage(); ?></p>
+        <p class="show-on-mobile"><?= /* @noEscape */ $block->getSuccessMobileMessage(); ?></p>
+    </div>
+    <?php if (!empty($paymentData[ResponseFieldsInterface::QR_CODE])): ?>
+        <div class="show-on-web">
+            <p><b><?= /* @noEscape */ __('QR Code'); ?></b></p>
+            <p>
+                <img class="qr-code-image"
+                     src="<?=  /* @noEscape */ $paymentData[ResponseFieldsInterface::QR_CODE]; ?>" alt="QR Code"/>
+            </p>
+        </div>
+    <?php endif; ?>
+    <?php if ($block->isToShowPixCopyPasteButton()): ?>
+        <div class="show-on-mobile">
+            <p><b><?= /* @noEscape */ __('Pix Copy Paste'); ?></b></p>
+            <p>
+                <button class="btn-pix-copy-paste"
+                        data-clipboard-text="
+                        <?= /* @noEscape */ $paymentData[ResponseFieldsInterface::QR_CODE_TEXT]; ?>"
+                >
+                    <?= /* @noEscape */ __('Copy PIX');?>
+                </button>
+            </p>
+        </div>
+    <?php endif; ?>
+    <?php if ($block->isToShowDeepLink()): ?>
+        <div class="show-on-mobile">
+            <p>
+                <a href="<?= /* @noEscape */ $paymentData[ResponseFieldsInterface::DEEP_LINK]; ?>" target="_blank">
+                    <?= /* @noEscape */ __('Click here to pay'); ?>
+                </a>
+            </p>
+        </div>
+    <?php endif; ?>
+</div>
+
+<script>
+    requirejs(['Shipay_PixQrGateway/js/vendor/clipboard'], function (ClipboardJS) {
+        'use strict';
+        window.addEventListener('load', function() {
+            new ClipboardJS('.btn-pix-copy-paste');
+        });
+    });
+</script>
+

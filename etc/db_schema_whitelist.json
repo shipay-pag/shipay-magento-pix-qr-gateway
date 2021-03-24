@@ -1,0 +1,7 @@
+{
+    "sales_order_payment": {
+        "column": {
+            "is_shipay_status_closed": true
+        }
+    }
+}

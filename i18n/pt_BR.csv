@@ -1,0 +1,31 @@
+"Registration","Cadastre-se"
+Enable,Ativo
+Environment,Ambiente
+Title,Título
+"Payment Method title visible on store front.","Título da forma de pagamento visível na loja."
+"Access Key","Chave de Acesso"
+"Secret Key","Chave Secreta"
+"Client ID","Identificador do Cliente"
+"Request and response calls to Shipay API are stored in the `shipay.log` file.","As requisições e respostas para a API Shipay são armazenadas no arquivo `shipay.log`."
+"Shipay Configuration","Configurações Shipay"
+"Shipay Registration","Cadastro Shipay"
+"It was not possible to generate the token in the Shipay API.","Não foi possível gerar o token na API Shipay."
+"The amount to be paid must be greater than 0.","O valor a ser pago deve ser maior que 0."
+"No authorization transaction to proceed refund.","Nenhuma transação de autorização para proceder o reembolso."
+"The payment transaction was paid.","A transação de pagamento foi paga."
+Production,Produção
+Test,Teste
+"Invalid Request","Requisição Inválida"
+"Payment Method","Método de Pagamento"
+"QR Code","QR Code"
+"Pix Copy Paste","PIX copia e cola"
+"Click here to pay","Clique aqui para pagar"
+"To make the payment, copy the code and paste it into the appropriate location in the PIX / copy and paste section of your financial institution's application.","Para fazer o pagamento, copie o código e cole no local apropriado da seção PIX / copia e cola do aplicativo de sua instituição financeira."
+"To make the payment, open the application of your financial institution, look for the section PIX / pay QR Code and read the QR Code.","Para fazer o pagamento, abra o aplicativo de sua instituição financeira, procure pela seção PIX / pagar QR Code e faça a leitura do QR Code."
+"To make the payment, click on the button to be directed to the digital wallet application.","Para fazer o pagamento, clique no botão para ser direcionado ao aplicativo da carteira digital."
+"To make the payment, open the digital wallet application on your cell phone and scan the QR Code.","Para fazer o pagamento, abra o aplicativo da carteira digital no seu celular e faça a leitura do QR Code."
+"Order successfully created!","Pedido criado com sucesso!"
+"Copy PIX","Copiar PIX"
+"Payment accept!","Pagamento Aprovado!"
+"Payment expired!","Cobrança expirada!"
+"Others","Outros"

@@ -1,0 +1,6 @@
+requirejs(['Shipay_PixQrGateway/js/vendor/clipboard'], function (ClipboardJS) {
+    'use strict';
+    window.addEventListener('load', function() {
+        new ClipboardJS('.btn-pix-copy-paste');
+    });
+});
