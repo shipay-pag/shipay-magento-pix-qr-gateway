@@ -17,7 +17,7 @@
     <default>
         <payment>
             <shipay>
-                <title>Shipay</title>
+                <title>PIX / Carteiras Digitais</title>
                 <model>ShipayAdapter</model>
                 <active>0</active>
                 <is_gateway>1</is_gateway>
@@ -31,7 +31,6 @@
                 <order_status>pending_payment</order_status>
                 <debug>true</debug>
                 <debugReplaceKeys>cpf,phone,email,last_name</debugReplaceKeys>
-                <can_use_internal>1</can_use_internal>
             </shipay>
         </payment>
     </default>

@@ -11,7 +11,7 @@
  * See LICENSE for license details.
  */
 
-define([
+ define([
    'uiComponent',
    'Magento_Checkout/js/model/payment/renderer-list'
 ], function (Component, rendererList) {

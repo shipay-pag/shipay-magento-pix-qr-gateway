@@ -22,6 +22,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Payment\Block\ConfigurableInfo;
 use Magento\Payment\Gateway\ConfigInterface;
 use Shipay\PixQrGateway\Gateway\Enums\PaymentStatus;
+use Shipay\PixQrGateway\Gateway\Http\GetPaymentTransaction;
 use Shipay\PixQrGateway\Gateway\Response\ResponseFieldsInterface;
 use Shipay\PixQrGateway\Model\Traits\PaymentTrait;
 use Shipay\PixQrGateway\Model\Wallet;
@@ -38,20 +39,28 @@ class PaymentInfo extends ConfigurableInfo
     private $wallet;
 
     /**
+     * @var GetPaymentTransaction
+     */
+    private $getPaymentTransaction;
+
+    /**
      * PaymentInfo constructor.
      * @param Context $context
      * @param ConfigInterface $config
      * @param Wallet $wallet
+     * @param GetPaymentTransaction $getPaymentTransaction
      * @param array $data
      */
     public function __construct(
         Context $context,
         ConfigInterface $config,
         Wallet $wallet,
+        GetPaymentTransaction $getPaymentTransaction,
         array $data = []
     ) {
         parent::__construct($context, $config, $data);
         $this->wallet = $wallet;
+        $this->getPaymentTransaction = $getPaymentTransaction;
     }
 
     /**
@@ -61,6 +70,38 @@ class PaymentInfo extends ConfigurableInfo
     {
         $this->setTemplate(self::TEMPLATE);
         parent::_construct();
+    }
+
+    /**
+     * @throws LocalizedException
+     * @return void
+     */
+    private function checkPaymentStatus()
+    {
+        $additionalInformation = $this->getPaymentAdditionalInformation();
+
+        if (!$additionalInformation ||
+            !isset($additionalInformation[ResponseFieldsInterface::STATUS]) ||
+            $additionalInformation[ResponseFieldsInterface::STATUS] !== PaymentStatus::PENDING_PAYMENT
+        ) {
+            return;
+        }
+
+        $paymentTransaction = $this->getPaymentTransaction
+            ->placeRequest($additionalInformation[ResponseFieldsInterface::ORDER_ID]);
+
+        if (!isset($paymentTransaction[ResponseFieldsInterface::STATUS]) ||
+            $paymentTransaction[ResponseFieldsInterface::STATUS] === PaymentStatus::PENDING_PAYMENT
+        ) {
+            return;
+        }
+
+        $payment = $this->getInfo();
+
+        $payment->setAdditionalInformation(
+            ResponseFieldsInterface::STATUS,
+            $paymentTransaction[ResponseFieldsInterface::STATUS]
+        )->save();
     }
 
     /**
@@ -95,9 +136,12 @@ class PaymentInfo extends ConfigurableInfo
      */
     public function isExpiredPayment()
     {
+        $this->checkPaymentStatus();
+
         $additionalInformation = $this->getPaymentAdditionalInformation();
         return isset($additionalInformation[ResponseFieldsInterface::STATUS]) &&
-            $additionalInformation[ResponseFieldsInterface::STATUS] === PaymentStatus::EXPIRED;
+            $additionalInformation[ResponseFieldsInterface::STATUS] === PaymentStatus::EXPIRED ||
+            $additionalInformation[ResponseFieldsInterface::STATUS] === PaymentStatus::CANCELLED;
     }
 
     /**

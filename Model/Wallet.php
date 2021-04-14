@@ -24,7 +24,7 @@ class Wallet
     const MERCADOPAGO = 'mercadopago';
     const PICPAY = 'picpay';
     const PIX = 'pix';
-    const PAGBANK = 'pagbank';
+    const PAGSEGURO = 'pagseguro';
     const SHIPAY_PAGADOR = 'shipay-pagador';
 
     /**
@@ -34,9 +34,9 @@ class Wallet
         self::AME => 'Ame',
         self::CIELO => 'Cielo',
         self::MERCADOPAGO => 'Mercado Pago',
-        self::PICPAY => 'Picpay',
+        self::PICPAY => 'PicPay',
         self::PIX => 'PIX',
-        self::PAGBANK => 'PagBank',
+        self::PAGSEGURO => 'PagSeguro - Pagbank',
         self::SHIPAY_PAGADOR => "Shipay Pagador"
     ];
 
