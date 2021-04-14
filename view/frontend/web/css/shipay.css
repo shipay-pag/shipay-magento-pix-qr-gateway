@@ -7,8 +7,22 @@
     height: 240px;
 }
 
+.pix-text {
+    width: 100%;
+    word-wrap: break-word;
+}
+
+.pix-text-order-view {
+    width: 80%;
+    max-width: 240px;
+    word-wrap: break-word;
+}
+
 @media screen and (max-width : 1920px){
     .shipay-success-page .show-on-mobile {
+        display: none;
+    }
+    .show-on-mobile {
         display: none;
     }
 }
@@ -17,7 +31,13 @@
     .shipay-success-page .show-on-web {
         display: none;
     }
+    .show-on-web {
+        display: none;
+    }
     .shipay-success-page .show-on-mobile {
+        display: block;
+    }
+    .show-on-mobile {
         display: block;
     }
 }

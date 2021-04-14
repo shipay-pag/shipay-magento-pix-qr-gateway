@@ -31,7 +31,10 @@ $walletLabel = $block->getWalletLabel();
     <?php if ($block->isToShowPixCopyPasteButton()): ?>
         <div class="show-on-mobile">
             <p><b><?= /* @noEscape */ __('Pix Copy Paste'); ?></b></p>
-            <p>
+            <p class="pix-text">
+                <?= /* @noEscape */ $paymentData[ResponseFieldsInterface::QR_CODE_TEXT]; ?>
+            </p>
+            <p class="pix-copy-paste-container" style="display: none;">
                 <button class="btn-pix-copy-paste"
                         data-clipboard-text="
                         <?= /* @noEscape */ $paymentData[ResponseFieldsInterface::QR_CODE_TEXT]; ?>"
@@ -45,7 +48,7 @@ $walletLabel = $block->getWalletLabel();
         <div class="show-on-mobile">
             <p>
                 <a href="<?= /* @noEscape */ $paymentData[ResponseFieldsInterface::DEEP_LINK]; ?>" target="_blank">
-                    <?= /* @noEscape */ __('Click here to pay'); ?>
+                    <button><?= /* @noEscape */ __('Click here to pay'); ?></button>
                 </a>
             </p>
         </div>

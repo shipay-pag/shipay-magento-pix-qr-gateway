@@ -17,7 +17,9 @@ namespace Shipay\PixQrGateway\Gateway\Http;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
+use Psr\Log\LoggerInterface;
 use Shipay\PixQrGateway\Gateway\Config\Config;
+use Shipay\PixQrGateway\Model\Cache\Type as ShipayTokenCache;
 
 class TokenGenerator
 {
@@ -32,16 +34,32 @@ class TokenGenerator
     private $urlResolver;
 
     /**
+     * @var ShipayTokenCache
+     */
+    private $cache;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * TokenGenerator constructor.
      * @param Config $config
      * @param UrlResolver $urlResolver
+     * @param ShipayTokenCache $cache
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Config $config,
-        UrlResolver $urlResolver
+        UrlResolver $urlResolver,
+        ShipayTokenCache $cache,
+        LoggerInterface $logger
     ) {
         $this->config = $config;
         $this->urlResolver = $urlResolver;
+        $this->cache = $cache;
+        $this->logger = $logger;
     }
 
     /**
@@ -49,6 +67,34 @@ class TokenGenerator
      * @throws LocalizedException
      */
     public function issueToken()
+    {
+        $token = $this->cache->load(ShipayTokenCache::TYPE_IDENTIFIER);
+
+        if ($token) {
+            // phpcs:disable
+            return unserialize($token);
+            // phpcs:enable
+        }
+
+        $newToken = $this->generateNewToken();
+
+        // phpcs:disable
+        $this->cache->save(
+            serialize($newToken),
+            ShipayTokenCache::TYPE_IDENTIFIER,
+            [],
+            ShipayTokenCache::CACHE_LIFE_TIME
+        );
+        // phpcs:enable
+
+        return $newToken;
+    }
+
+    /**
+     * @return string
+     * @throws LocalizedException
+     */
+    private function generateNewToken()
     {
         // phpcs:disable
         $channel = curl_init($this->urlResolver->getAuthUrl());

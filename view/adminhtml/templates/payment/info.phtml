@@ -34,6 +34,7 @@ $walletLabel = $block->getWalletLabel();
         </tr>
     <?php endforeach; ?>
     <tr>
+        <th><?= /* @noEscape */ __('Payment Type'); ?></th>
         <td>
             <?= /* @noEscape */ $walletLabel; ?>
         </td>
@@ -56,7 +57,7 @@ $walletLabel = $block->getWalletLabel();
     <?php endif; ?>
     <?php if ($block->isPendingPayment()): ?>
         <tr class="show-on-web">
-            <th scope="row"><?= /* @noEscape */ __('QR Code') ?></th>
+            <th scope="row" style="min-width: 110px;"><?= /* @noEscape */ __('QR Code') ?></th>
             <td>
                 <img style="max-width: 240px; max-height: 240px;"
                      src="<?= /* @noEscape */ $paymentData[ResponseFieldsInterface::QR_CODE]; ?>" alt="QR Code"/>
@@ -64,14 +65,15 @@ $walletLabel = $block->getWalletLabel();
         </tr>
         <?php if ($block->isToShowPixCopyPasteButton()): ?>
             <tr class="show-on-mobile">
-                <th scope="row" style="min-width: 120px;"><?= /* @noEscape */ __('Pix Copy Paste') ?></th>
+                <th scope="row" style="min-width: 110px;"><?= /* @noEscape */ __('Pix Copy Paste') ?></th>
                 <td>
-                    <p class="pix-text-order-view">
+                    <p class="pix-text-order-view" style="width: 500px; word-wrap: break-word;">
                         <?= /* @noEscape */ trim($paymentData[ResponseFieldsInterface::QR_CODE_TEXT]); ?>
                     </p>
                 </td>
             </tr>
-            <tr class="pix-copy-paste-container show-on-mobile" style="display: none;">
+            <tr class="pix-copy-paste-container" style="display: none;">
+                <th scope="row">&nbsp</th>
                 <td>
                     <button class="btn-pix-copy-paste"
                             data-clipboard-text="

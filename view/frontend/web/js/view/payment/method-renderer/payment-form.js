@@ -11,7 +11,7 @@
  * See LICENSE for license details.
  */
 
-define([
+ define([
     'Magento_Checkout/js/view/payment/default',
     'underscore'
 ], function (Component, _) {
@@ -57,7 +57,7 @@ define([
         },
 
         isPlaceOrderActionAllowed: function() {
-            return !!this.wallet().length;
+            return !!this.wallet();
         }
     });
 });

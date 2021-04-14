@@ -60,16 +60,74 @@ class WalletsRepository implements WalletsRepositoryInterface
             return [];
         }
 
-        $enabledWallets = array_filter($wallets[self::WALLETS], function ($item) {
-            return isset($item['active']) && $item['active'] === true;
-        });
+        $wallets = $this->fillWallets(
+            $this->filterEnabledWallets($wallets[self::WALLETS])
+        );
 
-        return array_reduce($enabledWallets, function ($accumulator, $item) {
+        array_multisort($wallets);
+
+        $result = [
+            [
+                'value' => '',
+                'text' => ''
+            ]
+        ];
+
+        $pixArrayIndex = $this->getPixArrayIndex($wallets);
+
+        if ($pixArrayIndex !== null) {
+            $result[1] = $wallets[$pixArrayIndex];
+            unset($wallets[$pixArrayIndex]);
+        }
+
+        foreach ($wallets as $wallet) {
+            $result[] = $wallet;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $wallets
+     * @return array
+     */
+    private function fillWallets($wallets)
+    {
+        return array_reduce($wallets, function ($accumulator, $item) {
             $accumulator[] = [
                 'value' => $item['name'],
                 'label' => $this->wallet->getWalletLabel($item['name'])
             ];
             return $accumulator;
         }, []);
+    }
+
+    /**
+     * @param array $wallets
+     * @return array
+     */
+    private function filterEnabledWallets($wallets)
+    {
+        return array_filter($wallets, function ($item) {
+            return isset($item['active']) && $item['active'] === true;
+        });
+    }
+
+    /**
+     * @param array $wallets
+     * @return null|int
+     */
+    private function getPixArrayIndex($wallets)
+    {
+        $index = null;
+
+        foreach ($wallets as $key => $wallet) {
+            if ($wallet['value'] === Wallet::PIX) {
+                $index = $key;
+                break;
+            }
+        }
+
+        return $index;
     }
 }
