@@ -1,7 +1,7 @@
 {
-  "name": "shipay/pix-qr-gateway",
+  "name": "shipay/shipay-magento-pix-qr-gateway",
   "description": "Shipay payment integration extension for Magento 2",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "magento2-module",
   "license": "MIT",
   "authors": [
