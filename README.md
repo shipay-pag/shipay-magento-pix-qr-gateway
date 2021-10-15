@@ -24,3 +24,12 @@ Finally flush cache:
 ```bash
 $ bin/magento cache:flush
 ```
+
+#### Enable token cache for better performance
+bash
+```
+$ bin/magento cache:enable shipay_token
+```
+
+#### Further docs (Portuguese)
+https://marketplace.magento.com/media/catalog/product/shipay_pagamentos_digitais-shipay-magento-pix-qr-gateway-1-0-2-ce/user_guides.pdf
