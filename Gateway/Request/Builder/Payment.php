@@ -53,13 +53,15 @@ class Payment implements BuilderInterface
 
         /** @var InfoInterface|OrderPayment $payment */
         $payment = $paymentDataObject->getPayment();
+        /** @var \Magento\Sales\Model\Order $order */
+        $order = $paymentDataObject->getOrder();
 
         $data = [
             RequestFieldsInterface::ORDER_REF => $buildSubject['payment']->getPayment()->getOrder()->getIncrementId(),
             RequestFieldsInterface::WALLET => $payment->getAdditionalInformation(DataAssignObserver::WALLET),
             RequestFieldsInterface::TOTAL => $this->getTransactionValue($buildSubject),
             RequestFieldsInterface::CALLBACK_URL => $this->urlResolver->getCallbackUrl(
-                $payment->getOrder()->getStoreId()
+                $order->getStoreId()
             )
         ];
 

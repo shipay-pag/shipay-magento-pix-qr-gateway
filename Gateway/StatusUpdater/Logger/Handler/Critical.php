@@ -15,14 +15,20 @@ declare(strict_types=1);
 
 namespace Shipay\PixQrGateway\Gateway\StatusUpdater\Logger\Handler;
 
-use Magento\Framework\Logger\Handler\System;
+use Magento\Framework\Logger\Handler\Base as BaseHandler;
+use Monolog\Logger;
 
-class Critical extends System
+class Critical extends BaseHandler
 {
     /**
      * @var string
      */
     const DEFAULT_DEBUG_FILE_NAME = '/var/log/shipay_cron.log';
+
+    /**
+     * @var int
+     */
+    protected $loggerType = Logger::INFO;
 
     /**
      * @var string

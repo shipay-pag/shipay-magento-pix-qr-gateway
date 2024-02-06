@@ -21,6 +21,7 @@ use Magento\Payment\Gateway\Http\TransferBuilder;
 use Magento\Payment\Gateway\Http\TransferFactoryInterface;
 use Magento\Payment\Gateway\Http\TransferInterface;
 use Shipay\PixQrGateway\Gateway\Converter\Converter;
+use Shipay\PixQrGateway\Gateway\Http\GetPaymentTransaction;
 
 class TransferFactory implements TransferFactoryInterface
 {
@@ -40,19 +41,27 @@ class TransferFactory implements TransferFactoryInterface
     private $urlResolver;
 
     /**
+     * @var GetPaymentTransaction
+     */
+    private $getPaymentTransaction;
+
+    /**
      * TransferFactory constructor.
      * @param TransferBuilder $transferBuilder
      * @param Converter $converter
      * @param UrlResolver $urlResolver
+     * @param GetPaymentTransaction $getPaymentTransaction
      */
     public function __construct(
         TransferBuilder $transferBuilder,
         Converter $converter,
-        UrlResolver $urlResolver
+        UrlResolver $urlResolver,
+        GetPaymentTransaction $getPaymentTransaction
     ) {
         $this->transferBuilder = $transferBuilder;
         $this->converter = $converter;
         $this->urlResolver = $urlResolver;
+        $this->getPaymentTransaction = $getPaymentTransaction;
     }
 
     /**
@@ -86,6 +95,23 @@ class TransferFactory implements TransferFactoryInterface
             return [
                 'gateway_url' => $gatewayUrl,
                 'http_verb' => 'DELETE'
+            ];
+        }
+
+        if (array_key_exists('transaction_id_cancel', $request) && !empty($request['transaction_id_cancel'])) {
+            $gatewayUrl = sprintf('%s/%s', $gatewayUrl, $request['transaction_id_cancel']);
+            $response = $this->getPaymentTransaction->placeRequest($request['transaction_id_cancel']);
+            $status = $response['status'] ?? "";
+            if ($status == "pending") {
+                unset($request['transaction_id_cancel']);
+                return [
+                    'gateway_url' => $gatewayUrl,
+                    'http_verb' => 'DELETE'
+                ];
+            }
+            return [
+                'gateway_url' => $gatewayUrl,
+                'http_verb' => 'GET'
             ];
         }
 

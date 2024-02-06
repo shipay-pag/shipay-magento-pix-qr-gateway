@@ -21,7 +21,7 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment as OrderPayment;
 
-class Refund implements BuilderInterface
+class Cancel implements BuilderInterface
 {
     /**
      * @param array $buildSubject
@@ -38,11 +38,11 @@ class Refund implements BuilderInterface
 
         $transactionId = $payment['last_trans_id'] ?? "";
         if (!$transactionId) {
-            throw new LocalizedException(__('No authorization transaction to proceed refund.'));
+            throw new LocalizedException(__('No authorization transaction to proceed cancel.'));
         }
 
         return [
-            'transaction_id_refund' => $transactionId,
+            'transaction_id_cancel' => $transactionId,
         ];
     }
 }

@@ -31,3 +31,5 @@ Test,Teste
 "Others","Outros"
 "Payment Type","Tipo de Pagamento"
 "Select below PIX or the desired Digital Wallet","Selecione abaixo PIX ou a Carteira Digital desejada"
+"Automatically cancel orders when expired and canceled on Shipay.", "Cancelar pedidos automaticamente quando expirados e cancelados na Shipay."
+"Automatically cancel orders", "Cancelar pedidos automaticamente"

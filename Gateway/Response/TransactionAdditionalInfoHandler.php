@@ -54,6 +54,6 @@ class TransactionAdditionalInfoHandler implements HandlerInterface
             }
         }
 
-        $payment->setTransactionAdditionalInfo('raw_details_info', $rawDetails);
+        $payment->setAdditionalInformation('raw_details_info', $rawDetails);
     }
 }

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Shipay\PixQrGateway\Model;
 
 use Shipay\PixQrGateway\Api\WalletsRepositoryInterface;
+use Shipay\PixQrGateway\Gateway\Config\Config;
 use Shipay\PixQrGateway\Gateway\Http\GetWallets;
 
 class WalletsRepository implements WalletsRepositoryInterface
@@ -33,16 +34,24 @@ class WalletsRepository implements WalletsRepositoryInterface
     private $wallet;
 
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
      * WalletsRepository constructor.
      * @param GetWallets $getWallets
      * @param Wallet $wallet
+     * @param Config $config
      */
     public function __construct(
         GetWallets $getWallets,
-        Wallet $wallet
+        Wallet $wallet,
+        Config $config
     ) {
         $this->getWallets = $getWallets;
         $this->wallet = $wallet;
+        $this->config = $config;
     }
 
     /**
@@ -50,6 +59,10 @@ class WalletsRepository implements WalletsRepositoryInterface
      */
     public function getWallets()
     {
+        if (!$this->config->isEnable()) {
+            return [];
+        }
+
         try {
             $wallets = $this->getWallets->placeRequest();
         } catch (\Exception $exception) {

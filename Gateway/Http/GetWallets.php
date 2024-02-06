@@ -15,101 +15,20 @@ declare(strict_types=1);
 
 namespace Shipay\PixQrGateway\Gateway\Http;
 
-use Magento\Framework\Exception\LocalizedException;
-use Psr\Log\LoggerInterface;
+use Shipay\PixQrGateway\Gateway\Http\Transactions;
 
-class GetWallets
+class GetWallets extends Transactions
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
-     * @var TokenGenerator
-     */
-    private $tokenGenerator;
-
-    /**
-     * @var UrlResolver
-     */
-    private $urlResolver;
-
-    /**
-     * @var string
-     */
-    private $token;
-
-    /**
-     * GetPixTransaction constructor.
-     * @param LoggerInterface $logger
-     * @param TokenGenerator $tokenGenerator
-     * @param UrlResolver $urlResolver
-     */
-    public function __construct(
-        LoggerInterface $logger,
-        TokenGenerator $tokenGenerator,
-        UrlResolver $urlResolver
-    ) {
-        $this->logger = $logger;
-        $this->tokenGenerator = $tokenGenerator;
-        $this->urlResolver = $urlResolver;
-    }
-
-    /**
-     * @return bool|mixed
+     * @param $transactionId
+     * @return bool
      * @throws \Exception
      */
     public function placeRequest()
     {
-        $result = false;
-
-        try {
-            // phpcs:disable
-            $channel = curl_init($this->urlResolver->getWalletsUrl());
-
-            curl_setopt($channel, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($channel, CURLOPT_RETURNTRANSFER, true);
-
-            curl_setopt($channel, CURLOPT_HTTPHEADER, $this->getGatewayHeaders());
-
-            $response = curl_exec($channel);
-
-            curl_close($channel);
-
-            if ($response !== false) {
-                return json_decode($response, true);
-            }
-        } catch (\Exception $exception) {
-            $this->logger->critical($exception);
-            throw $exception;
-        }
-        // phpcs:enable
-
-        return $result;
-    }
-
-    /**
-     * @return array
-     * @throws LocalizedException
-     */
-    public function getGatewayHeaders()
-    {
-        return [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->getToken(),
-        ];
-    }
-
-    /**
-     * @throws LocalizedException
-     */
-    private function getToken()
-    {
-        if ($this->token === null) {
-            $this->token = $this->tokenGenerator->issueToken();
-        }
-
-        return $this->token;
+        // phpcs:disable
+        $channel = curl_init($this->urlResolver->getWalletsUrl());
+        return $this->requestShipay($channel);
     }
 }

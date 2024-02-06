@@ -30,9 +30,7 @@ use Shipay\PixQrGateway\Model\Wallet;
 class PaymentInfo extends ConfigurableInfo
 {
     use PaymentTrait;
-
-    const TEMPLATE = 'Shipay_PixQrGateway::payment/info.phtml';
-
+    protected $_template = 'Shipay_PixQrGateway::payment/info.phtml';
     /**
      * @var Wallet
      */
@@ -68,7 +66,6 @@ class PaymentInfo extends ConfigurableInfo
      */
     public function _construct()
     {
-        $this->setTemplate(self::TEMPLATE);
         parent::_construct();
     }
 

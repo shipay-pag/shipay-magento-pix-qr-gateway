@@ -23,6 +23,11 @@ use Magento\Payment\Model\CcConfig;
 use Magento\Payment\Model\CcConfigProvider;
 use Shipay\PixQrGateway\Api\WalletsRepositoryInterface;
 
+/**
+ * Class ConfigProvider
+ *
+ * @api
+ */
 class ConfigProvider extends CcConfigProvider implements ConfigProviderInterface
 {
     const CODE = 'shipay';

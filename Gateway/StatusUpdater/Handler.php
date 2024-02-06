@@ -17,10 +17,12 @@ declare(strict_types=1);
 
 namespace Shipay\PixQrGateway\Gateway\StatusUpdater;
 
+use Psr\Log\LoggerInterface as Logger;
+use Shipay\PixQrGateway\Gateway\Config\Config;
 use Shipay\PixQrGateway\Gateway\Enums\PaymentStatus;
 use Shipay\PixQrGateway\Gateway\StatusUpdater\Model\Invoicer;
 use Shipay\PixQrGateway\Gateway\StatusUpdater\Model\PaymentFinisher;
-
+use Magento\Sales\Api\OrderManagementInterface;
 class Handler
 {
     /**
@@ -39,19 +41,44 @@ class Handler
     private $paymentFinisher;
 
     /**
+     * @var OrderManagementInterface
+     */
+    private $orderManagement;
+
+    /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * Handler constructor.
      * @param Client $client
      * @param Invoicer $invoicer
      * @param PaymentFinisher $paymentFinisher
+     * @param OrderManagementInterface $orderManagement
+     * @param Config $config
+     * @param Logger $logger
      */
     public function __construct(
         Client $client,
         Invoicer $invoicer,
-        PaymentFinisher $paymentFinisher
+        PaymentFinisher $paymentFinisher,
+        OrderManagementInterface $orderManagement,
+        Config $config,
+        Logger $logger
+
     ) {
         $this->client = $client;
         $this->invoicer = $invoicer;
         $this->paymentFinisher = $paymentFinisher;
+        $this->orderManagement = $orderManagement;
+        $this->config = $config;
+        $this->logger = $logger;
     }
 
     /**
@@ -88,6 +115,17 @@ class Handler
         }
 
         if ($transaction['status'] === PaymentStatus::EXPIRED) {
+            if ($this->config->allowedCancelOrders()) {
+                $this->cancelOrder($transaction['order_id']);
+            }
+            $this->paymentFinisher->closePayment($transaction['payment_id'], $transaction['status']);
+            return $transaction['order_id'];
+        }
+
+        if ($transaction['status'] === PaymentStatus::CANCELLED) {
+            if ($this->config->allowedCancelOrders()) {
+                $this->cancelOrder($transaction['order_id']);
+            }
             $this->paymentFinisher->closePayment($transaction['payment_id'], $transaction['status']);
             return $transaction['order_id'];
         }
@@ -99,6 +137,23 @@ class Handler
         }
 
         return true;
+    }
+
+
+    /**
+     * @param $orderId
+     * @return mixed
+     */
+    private function cancelOrder($orderId)
+    {
+        try {
+            $this->orderManagement->cancel($orderId);
+            $this->logger->debug("Shipay Webhook Order Canceled : ". $orderId);
+        } catch (\Exception $e) {
+            $this->logger->debug("Shipay Webhook Error Cancel Order: ". $e->getMessage());
+        }
+
+        return $orderId;
     }
 
     /**
