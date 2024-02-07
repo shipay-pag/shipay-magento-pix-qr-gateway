@@ -74,7 +74,7 @@ class UpdateStatusCommand extends Command
             $output->writeln('Shipay Update Orders Status Successfully.');
             $this->logger->debug("Shipay invoiced paid orders ids: $updatedOrders");
         } catch (\Exception $e) {
-            $this->logger->debug("Shipay UpdateOrderStatus Cli error: " . $e->getMessage());
+            $this->logger->error("Shipay UpdateOrderStatus Cli error: " . $e->getMessage());
         }
         return 0;
     }
