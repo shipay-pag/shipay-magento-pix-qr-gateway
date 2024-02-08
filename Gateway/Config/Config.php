@@ -31,6 +31,15 @@ class Config extends PaymentConfig
     const DEBUG = 'debug';
     const PRODUCTION_GATEWAY_URL = 'https://api.shipay.com.br';
     const TEST_GATEWAY_URL = 'https://api-staging.shipay.com.br';
+    const AUTOMATICALLY_CANCEL_ORDERS = 'automatically_cancel_orders';
+
+    /**
+     * @return boolean
+     */
+    public function isEnable()
+    {
+        return (bool)$this->getValue(self::ACTIVE);
+    }
 
     /**
      * @return string
@@ -82,6 +91,14 @@ class Config extends PaymentConfig
     public function getEnvironment()
     {
         return (string)$this->getValue(self::ENVIRONMENT);
+    }
+
+    /**
+     * @return bool
+     */
+    public function allowedCancelOrders()
+    {
+        return (bool)$this->getValue(self::AUTOMATICALLY_CANCEL_ORDERS);
     }
 
     /**

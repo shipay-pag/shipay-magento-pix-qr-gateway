@@ -31,6 +31,7 @@
                 <order_status>pending_payment</order_status>
                 <debug>true</debug>
                 <debugReplaceKeys>cpf,phone,email,last_name</debugReplaceKeys>
+                <automatically_cancel_orders>1</automatically_cancel_orders>
             </shipay>
         </payment>
     </default>

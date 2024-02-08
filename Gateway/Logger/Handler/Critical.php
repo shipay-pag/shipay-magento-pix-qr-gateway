@@ -15,14 +15,22 @@ declare(strict_types=1);
 
 namespace Shipay\PixQrGateway\Gateway\Logger\Handler;
 
-use Magento\Framework\Logger\Handler\System;
-
-class Critical extends System
+use Magento\Framework\Logger\Handler\Base as BaseHandler;
+use Monolog\Logger;
+/**
+ * @api
+ */
+class Critical extends BaseHandler
 {
     /**
      * @var string
      */
     const DEFAULT_DEBUG_FILE_NAME = '/var/log/shipay.log';
+
+    /**
+     * @var int
+     */
+    protected $loggerType = Logger::CRITICAL;
 
     /**
      * @var string
