@@ -48,6 +48,12 @@
                     <validate>required-entry</validate>
                     <config_path>payment/shipay/client_id</config_path>
                 </field>
+                <field id="automatically_cancel_orders" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Automatically cancel orders</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Automatically cancel orders when expired and canceled on Shipay.]]></comment>
+                    <config_path>payment/shipay/automatically_cancel_orders</config_path>
+                </field>
                 <field id="debug" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Debug</label>
                     <comment><![CDATA[Request and response calls to Shipay API are stored in the `shipay.log` file.]]></comment>

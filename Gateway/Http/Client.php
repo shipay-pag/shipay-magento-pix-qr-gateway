@@ -85,10 +85,11 @@ class Client implements ClientInterface
             $channel = curl_init($transferObject->getUri());
 
             curl_setopt($channel, CURLOPT_CUSTOMREQUEST, $transferObject->getMethod());
-            curl_setopt($channel, CURLOPT_POSTFIELDS, $transferObject->getBody());
             curl_setopt($channel, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($channel, CURLOPT_HTTPHEADER, $this->getGatewayHeaders());
-
+            if ($transferObject->getMethod() != "GET") {
+                curl_setopt($channel, CURLOPT_POSTFIELDS, $transferObject->getBody());
+            }
             $response = curl_exec($channel);
 
             curl_close($channel);

@@ -76,6 +76,8 @@ class UpdatePendingPaymentStatus implements DataPatchInterface
             $where = ['status = ?' => 'pending_payment', 'state = ?' => 'processing'];
             $connection->update($tableName, $bind, $where);
         }
+
+        return $this;
     }
 
     /**

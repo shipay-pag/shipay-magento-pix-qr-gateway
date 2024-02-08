@@ -22,6 +22,7 @@ use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Psr\Log\LoggerInterface;
+use Magento\Sales\Api\InvoiceRepositoryInterface;
 
 class Invoicer
 {
@@ -41,18 +42,26 @@ class Invoicer
     private $logger;
 
     /**
+     * @var InvoiceRepositoryInterface
+     */
+    private $invoiceRepository;
+
+    /**
      * Invoicer constructor.
      * @param InvoiceService $invoiceService
      * @param OrderRepositoryInterface $orderRepository
+     * @param InvoiceRepositoryInterface $invoiceRepository
      * @param LoggerInterface $logger
      */
     public function __construct(
         InvoiceService $invoiceService,
         OrderRepositoryInterface $orderRepository,
+        InvoiceRepositoryInterface $invoiceRepository,
         LoggerInterface $logger
     ) {
         $this->invoiceService = $invoiceService;
         $this->orderRepository = $orderRepository;
+        $this->invoiceRepository = $invoiceRepository;
         $this->logger = $logger;
     }
 
@@ -72,10 +81,10 @@ class Invoicer
 
             /** @var Invoice $invoice */
             $invoice = $this->invoiceService->prepareInvoice($order);
-            $invoice->setRequestedCaptureCase(Invoice::CAPTURE_OFFLINE);
+            $invoice->setData("requested_capture_case", Invoice::CAPTURE_OFFLINE);
             $invoice->register();
             $invoice->setTransactionId($order->getPayment()->getLastTransId());
-            $invoice->save();
+            $this->invoiceRepository->save($invoice);
 
             $order->addStatusToHistory(
                 Order::STATE_PROCESSING,
