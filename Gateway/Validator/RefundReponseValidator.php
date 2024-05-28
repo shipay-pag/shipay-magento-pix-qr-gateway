@@ -40,7 +40,7 @@ class RefundReponseValidator extends AbstractValidator
      * @var string[]
      */
     private $statuses = [
-        PaymentStatus::CANCELLED,
+        PaymentStatus::PARTIAL_REFUNDED,
         PaymentStatus::REFUNDED,
     ];
 

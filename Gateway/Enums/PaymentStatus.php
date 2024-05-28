@@ -24,4 +24,5 @@ class PaymentStatus
     const EXPIRED = 'expired';
     const CANCELLED = 'cancelled';
     const REFUNDED = 'refunded';
+    const PARTIAL_REFUNDED = 'partial_refunded';
 }
