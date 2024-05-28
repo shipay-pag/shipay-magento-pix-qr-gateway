@@ -90,7 +90,7 @@ class TransferFactory implements TransferFactoryInterface
         $gatewayUrl = rtrim($this->urlResolver->getOrderUrl(), '/');
 
         if (array_key_exists('transaction_id_refund', $request) && !empty($request['transaction_id_refund'])) {
-            $gatewayUrl = sprintf('%s/%s', $gatewayUrl, $request['transaction_id_refund']);
+            $gatewayUrl = sprintf('%s/%s/%s', $gatewayUrl, $request['transaction_id_refund'], "refund");
             unset($request['transaction_id_refund']);
             return [
                 'gateway_url' => $gatewayUrl,
