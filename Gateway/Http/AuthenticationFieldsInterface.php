@@ -22,4 +22,5 @@ interface AuthenticationFieldsInterface
     const CLIENT_ID = 'client_id';
     const ACCESS_TOKEN = 'access_token';
     const REFRESH_TOKEN = 'refresh_token';
+    const TIME_TOKEN = 'access_token_expires_in';
 }

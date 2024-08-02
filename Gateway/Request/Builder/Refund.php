@@ -36,13 +36,14 @@ class Refund implements BuilderInterface
         /** @var InfoInterface|OrderPayment $payment */
         $payment = $paymentDataObject->getPayment();
 
-        $transactionId = $payment['last_trans_id'] ?? "";
+        $transactionId = $payment['refund_transaction_id'] ?? $payment['last_trans_id'];
         if (!$transactionId) {
             throw new LocalizedException(__('No authorization transaction to proceed refund.'));
         }
 
         return [
             'transaction_id_refund' => $transactionId,
+            'amount' => $payment->getCreditmemo()->getGrandTotal()
         ];
     }
 }
