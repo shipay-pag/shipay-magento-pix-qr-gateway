@@ -76,14 +76,18 @@ class TokenGenerator
             // phpcs:enable
         }
 
-        $newToken = $this->generateNewToken();
+        $result = $this->generateNewToken();
+
+        $newToken = $result[AuthenticationFieldsInterface::ACCESS_TOKEN];
+
+        $timeToken = $result[AuthenticationFieldsInterface::TIME_TOKEN];
 
         // phpcs:disable
         $this->cache->save(
             serialize($newToken),
             ShipayTokenCache::TYPE_IDENTIFIER,
             [],
-            ShipayTokenCache::CACHE_LIFE_TIME
+            $timeToken
         );
         // phpcs:enable
 
@@ -119,7 +123,7 @@ class TokenGenerator
             $this->throwExeption();
         }
 
-        return $response[AuthenticationFieldsInterface::ACCESS_TOKEN];
+        return $response;
     }
 
     /**
