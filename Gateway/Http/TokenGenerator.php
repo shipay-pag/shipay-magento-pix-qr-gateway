@@ -20,6 +20,7 @@ use Magento\Framework\Phrase;
 use Psr\Log\LoggerInterface;
 use Shipay\PixQrGateway\Gateway\Config\Config;
 use Shipay\PixQrGateway\Model\Cache\Type as ShipayTokenCache;
+use Magento\Framework\Serialize\SerializerInterface;
 
 class TokenGenerator
 {
@@ -44,22 +45,30 @@ class TokenGenerator
     private $logger;
 
     /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
      * TokenGenerator constructor.
      * @param Config $config
      * @param UrlResolver $urlResolver
      * @param ShipayTokenCache $cache
      * @param LoggerInterface $logger
+     * @param SerializerInterface $serializer
      */
     public function __construct(
         Config $config,
         UrlResolver $urlResolver,
         ShipayTokenCache $cache,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SerializerInterface $serializer
     ) {
         $this->config = $config;
         $this->urlResolver = $urlResolver;
         $this->cache = $cache;
         $this->logger = $logger;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -72,7 +81,7 @@ class TokenGenerator
 
         if ($token) {
             // phpcs:disable
-            return unserialize($token);
+            return $this->serializer->unserialize($token);
             // phpcs:enable
         }
 
@@ -84,7 +93,7 @@ class TokenGenerator
 
         // phpcs:disable
         $this->cache->save(
-            serialize($newToken),
+            $this->serializer->serialize($newToken),
             ShipayTokenCache::TYPE_IDENTIFIER,
             [],
             $timeToken
@@ -117,7 +126,7 @@ class TokenGenerator
             $this->throwExeption();
         }
 
-        $response = json_decode($response, true);
+        $response = $this->serializer->unserialize($response);
 
         if (!isset($response[AuthenticationFieldsInterface::ACCESS_TOKEN])) {
             $this->throwExeption();
@@ -131,7 +140,7 @@ class TokenGenerator
      */
     private function getAuthPayload()
     {
-        return json_encode([
+        return $this->serializer->serialize([
             AuthenticationFieldsInterface::ACCESS_KEY => $this->config->getAccessKey(),
             AuthenticationFieldsInterface::SECRET_KEY => $this->config->getSecretKey(),
             AuthenticationFieldsInterface::CLIENT_ID => $this->config->getClientId()
