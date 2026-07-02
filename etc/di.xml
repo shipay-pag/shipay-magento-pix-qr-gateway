@@ -133,6 +133,7 @@
         <arguments>
             <argument name="builders" xsi:type="array">
                 <item name="payment" xsi:type="string">Shipay\PixQrGateway\Gateway\Request\Builder\Payment</item>
+                <item name="buyer" xsi:type="string">Shipay\PixQrGateway\Gateway\Request\Builder\Buyer</item>
                 <item name="product_items" xsi:type="string">Shipay\PixQrGateway\Gateway\Request\Builder\ProductItems</item>
             </argument>
         </arguments>

@@ -33,16 +33,21 @@ class Buyer implements BuilderInterface
         /** @var OrderInterface $order */
         $order = $paymentDataObject->getPayment()->getOrder();
 
-        $data = [
+        $document = strtoupper(
+            preg_replace('/[^A-Z0-9]/i', '', (string)$order->getCustomerTaxvat())
+        );
+
+        if (empty($document)) {
+            return [];
+        }
+
+        return [
             RequestFieldsInterface::BUYER => [
-                RequestFieldsInterface::FIRST_NAME => $order->getCustomerFirstname(),
-                RequestFieldsInterface::LAST_NAME => $order->getCustomerLastname(),
-                RequestFieldsInterface::CPF => $order->getCustomerTaxvat(),
+                'name' => trim($order->getCustomerFirstname() . ' ' . $order->getCustomerLastname()),
+                'cpf_cnpj' => $document,
                 RequestFieldsInterface::EMAIL => $order->getCustomerEmail(),
                 RequestFieldsInterface::PHONE => $order->getBillingAddress()->getTelephone()
             ]
         ];
-
-        return $data;
     }
 }
